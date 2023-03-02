@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Compañía de Telecomunicaciones</title>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+    }
+    
+    /* Estilos del encabezado */
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    header h1 {
+      margin: 0;
+    }
+    
+    /* Estilos del contenido */
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    /* Estilos del formulario */
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #ccc;
+      margin: 20px auto;
+      width: 500px;
+    }
+    
+    form h2 {
+      text-align: center;
+    }
+    
+    form label,
+    form input[type="text"] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    
+    form input[type="submit"] {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    /* Estilos del pie de página */
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 98.5%;
+      height: 30px;
+      nav-down: 10px;
+    }
+
+    /* Estilos de la tabla */
+    table {
+            border-collapse:collapse;
+            width: 50%;
+            color:black;
+            text-align: center;
+            margin-left: 330px;
+    }
+    th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+    }
+    th {
+            background-color: lightgray;
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Compañía de Telecomunicaciones</h1>
+  </header>
+  
+  <main>
+    <h2>Bienvenido a nuestra compañía de telecomunicaciones</h2>
+    <p>Ofrecemos servicios de telefonía, internet y televisión de alta calidad a precios competitivos. ¡Contáctanos para más información!</p>
+  </main>
+  
+  <!-- formulario o recuadro para ingresar la direccion -->
+  <form id="homepass-form">
+      <label for="address">Ingrese la dirección de Homepass:</label>
+      <input type="text" id="address" name="address">
+      <input type="submit" value="Enviar">
+  </form>
+
+  <br><br>
+
+
+  <!-- tabla donde muestra las direcciones y servicios -->
+  <table id="homepass-table">
+    <tr>
+        <th>ID</th>
+        <th>Address</th>
+        <th>Services</th>
+    </tr>
+  </table>
+
+  <script>
+    const form = document.getElementById("homepass-form");
+        const table = document.getElementById("homepass-table");
+        let homepasses = [];
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let address = document.getElementById("address").value;
+
+            if (!address) {
+                alert("Porfavor ingrese una dirección.");
+                return;
+            }
+
+            // requerimientos de las direcciones
+            // address = address.toLowerCase().replace(/cra|kra|kr|arrera|carrera/g, "Carrera");
+            // address = address.toLowerCase().replace(/ave|av|venida/g, "Avenida");
+            // address = address.toLowerCase().replace(/call|cl|ca|c./g, "Calle");
+            // address = address.toLowerCase().replace(/auto|autpis|atpis/g, "Autopista");
+            // address = address.toLowerCase().replace(/diag|dia|dig/g, "Diagonal");
+
+            // address = address.toLowerCase().replace(/#/g, "");
+            // address = formatAddress(address); 
+            // address = ordenarDireccion(address);
+
+            address = ordenarDireccion(address);
+
+
+            // address = address.toLowerCase().replace(/_/g, "");
+            // address = address.toLowerCase().replace(/;|:|,|{}/g, "");
+            // address = address.replace(/[^a-zA-Z0-9\s]/g, '');
+
+
+            // revisar si la direccion ya existe
+            const existingHomepass = homepasses.find(homepass => homepass.address === address);
+            if (existingHomepass) {
+                alert("La dirección ingresada ya existe.");
+                return;
+            }
+
+            //generar los servicios random
+            if (homepasses.findIndex(homepass => homepass.address === address) === -1) {
+                const services = ["TV", "Telefono", "Internet"];
+                const numberOfServices = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+                homepasses.push({ id: homepasses.length + 1, address: address, services: services.sort(() => Math.random() - 0.5).slice(0, numberOfServices) });
+              }
+            
+            //formatAddress(); //llamar la funcion formatAddress para que la direccion sea limpiada o ordenada
+            updateTable();
+        });
+
+            //      // esta funcion es para ordenar la direccion y ademas para borrar simbolos de puntuacion y espacios en blanco
+            //   function formatAddress(address){
+            //   //let formattedAddress = address.replace(/#|,|;|\s/g, " "); // remueve los signos de puntuación y los espacios en blanco
+            //   let formattedAddress = address.replace(/;|:|,|#|{}/g, ''); // remueve los signos de puntuación y los espacios en blanco
+            //   let parts = formattedAddress.split(" "); // divide la dirección en partes utilizando el espacio como separador
+
+            //   // verifica si la dirección comienza con alguna de las palabras clave (carrera, calle, transversal, avenida, diagonal, autopista)
+            //   let keyword = "";
+            //   if (parts[0].toLowerCase() === "carrera") {
+            //     keyword = "Carrera";
+            //   } else if (parts[0].toLowerCase() === "calle") {
+            //     keyword = "Calle";
+            //   } else if (parts[0].toLowerCase() === "transversal") {
+            //     keyword = "Transversal";
+            //   } else if (parts[0].toLowerCase() === "avenida") {
+            //     keyword = "Avenida";
+            //   } else if (parts[0].toLowerCase() === "diagonal") {
+            //     keyword = "Diagonal";
+            //   } else if (parts[0].toLowerCase() === "autopista") {
+            //     keyword = "Autopista";
+            //   }
+            //   if (/^[a-zA-Z0-9]+$/.test(formattedAddress)){
+            //     parts[1]
+            //   }
+
+            //   // si la dirección comienza con alguna de las palabras clave, se formatea la dirección
+            //   if (keyword !== "") {
+            //     formattedAddress = keyword + " " + parts[1] + " " + parts[2];
+            //   }
+
+            //   return formattedAddress;
+            // }
+
+
+
+
+//             function ordenarDireccion(address) {
+//   let partes = address.split(" ");
+//   let orden = ["avenida", "calle", "carrera", "autopista", "carretera", "transversal"];
+//   partes = partes.filter(function(part) {
+//     return part !== "#";
+//   });
+//   partes = partes.map(function(part) {
+//     if (part.match(/^[0-9]+(-[0-9]+)?$/)) {
+//       return part;
+//     } else if (part.match(/cra|kra|kr|arrera|carrera/)) {
+//       return "Carrera";
+//     } else if (part.match(/ave|av|venida/)) {
+//       return "Avenida";
+//     } else if (part.match(/call|cl|ca|c\./)) {
+//       return "Calle";
+//     } else if (part.match(/auto|autpis|atpis/)) {
+//       return "Autopista";
+//     } else if (part.match(/diag|dia|dig/)) {
+//       return "Diagonal";
+//     } else if (part.match(/^\d+[a-zA-Z]$/)) {
+//       return part.slice(-1) + " " + part.slice(0, -1);
+//     } else {
+//       return part;
+//     }
+//   });
+//   partes.sort(function(a, b) {
+//     return orden.indexOf(a.toLowerCase()) - orden.indexOf(b.toLowerCase());
+//   });
+//   let numero = partes[1];
+//   partes[1] = partes[2];
+//   partes[2] = numero;
+//   return partes.join(" ");
+// }
+
+
+
+
+
+// function ordenarDireccion(address) {
+//   let partes = address.split(/[\s#-]+/);
+//   let orden = ["avenida", "calle", "carrera", "autopista", "carretera", "transversal"];
+//   partes = partes.filter(function(part) {
+//     return part !== "";
+//   });
+//   partes = partes.map(function(part) {
+//     if (part.match(/^[0-9]+(-[0-9]+)?$/)) {
+//       return part;
+//     } else if (part.match(/cra|kra|kr|arrera|carrera/)) {
+//       return "Carrera";
+//     } else if (part.match(/ave|av|venida/)) {
+//       return "Avenida";
+//     } else if (part.match(/call|cl|ca|c\./)) {
+//       return "Calle";
+//     } else if (part.match(/auto|autpis|atpis/)) {
+//       return "Autopista";
+//     } else if (part.match(/diag|dia|dig/)) {
+//       return "Diagonal";
+//     } else if (part.match(/^\d+[a-zA-Z]$/)) {
+//       return part.slice(-1) + " " + part.slice(0, -1);
+//     } else {
+//       return part;
+//     }
+//   });
+//   partes.sort(function(b, a) {
+//     return orden.indexOf(a.toLowerCase()) - orden.indexOf(b.toLowerCase());
+//   });
+//   let numeroIndex = partes.findIndex(part => part.match(/^[0-9]+(-[0-9]+)?$/));
+//   if (numeroIndex > -1) {
+//     let numeroParte = partes[numeroIndex];
+//     let sepIndex = numeroParte.indexOf("-");
+//     if (sepIndex > -1) {
+//       let inicio = numeroParte.slice(0, sepIndex);
+//       let fin = numeroParte.slice(sepIndex + 1);
+//       partes[numeroIndex] = inicio + "-" + fin;
+//     }
+//     partes.splice(numeroIndex + 1, 0 , "#");
+//   }
+//   return partes.join(" ");
+// }
+
+
+function ordenarDireccion(address) {
+  let partes = address.split(/[\s#-]+/);
+  let orden = ["avenida", "calle", "carrera", "autopista", "carretera", "transversal"];
+  partes = partes.filter(function(part) {
+    return part !== "";
+  });
+  partes = partes.map(function(part) {
+    if (part.match(/^[0-9]+(-[0-9]+)?$/)) {
+      return part;
+    } else if (part.match(/cra|kra|kr|arrera|carrera/)) {
+      return "Carrera";
+    } else if (part.match(/ave|av|venida/)) {
+      return "Avenida";
+    } else if (part.match(/call|cl|ca|c\./)) {
+      return "Calle";
+    } else if (part.match(/auto|autpis|atpis/)) {
+      return "Autopista";
+    } else if (part.match(/diag|dia|dig/)) {
+      return "Diagonal";
+    } else if (part.match(/^\d+[a-zA-Z]$/)) {
+      return part.slice(-1) + " " + part.slice(0, -1);
+    } else {
+      return "";
+    }
+  });
+  partes = partes.filter(function(part) {
+    return part !== "";
+  });
+  partes.sort(function(b, a) {
+    return orden.indexOf(a.toLowerCase()) - orden.indexOf(b.toLowerCase());
+  });
+  let numeroIndex = partes.findIndex(part => part.match(/^[0-9]+(-[0-9]+)?$/));
+  if (numeroIndex > -1) {
+    let numeroParte = partes[numeroIndex];
+    let sepIndex = numeroParte.indexOf("-");
+    if (sepIndex > -1) {
+      let inicio = numeroParte.slice(0, sepIndex);
+      let fin = numeroParte.slice(sepIndex + 1);
+      partes[numeroIndex] = inicio + "-" + fin;
+    }
+    partes.splice(numeroIndex + 1, 0 , "#");
+  }
+  return partes.slice(0, 2).join(" ") + " " + partes.slice(2).join(" ");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // esta funcion es para actualizar la tabla 
+            function updateTable() {
+                  table.innerHTML = `
+                <tr>
+                    <th>ID</th>
+                    <th>Address</th>
+                    <th>Services</th>
+                </tr>
+            `;
+
+            for (const homepass of homepasses) {
+                table.innerHTML += `
+                    <tr>
+                        <td>${homepass.id}</td>
+                        <td>${homepass.address}</td>
+                        <td>${homepass.services.join(", ")}</td>
+                    </tr>
+                `;
+            }
+        }
+  </script>
+
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <footer>
+      &copy; 2023 Compañía de Telecomunicaciones
+    </footer>
+  </body>
+  
+  </html>
+  
